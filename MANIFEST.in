@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include tax_excel *.css
+recursive-include tax_excel *.csv
+recursive-include tax_excel *.html
+recursive-include tax_excel *.ico
+recursive-include tax_excel *.js
+recursive-include tax_excel *.json
+recursive-include tax_excel *.md
+recursive-include tax_excel *.png
+recursive-include tax_excel *.py
+recursive-include tax_excel *.svg
+recursive-include tax_excel *.txt
+recursive-exclude tax_excel *.pyc
