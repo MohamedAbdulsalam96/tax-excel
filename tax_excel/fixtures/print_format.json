@@ -1,0 +1,29 @@
+[
+ {
+  "absolute_value": 0,
+  "align_labels_right": 0,
+  "css": null,
+  "custom_format": 0,
+  "default_print_language": null,
+  "disabled": 0,
+  "doc_type": "Salary Slip",
+  "docstatus": 0,
+  "doctype": "Print Format",
+  "font": "Default",
+  "format_data": "[{\"fieldname\": \"print_heading_template\", \"fieldtype\": \"Custom HTML\", \"options\": \"<div class=\\\"print-heading\\\">\\t\\t\\t\\t<h2><div>Salary Slip</div><br><small class=\\\"sub-heading\\\">{{ doc.name }}</small>\\t\\t\\t\\t</h2></div>\"}, {\"fieldtype\": \"Section Break\", \"label\": \"\"}, {\"fieldtype\": \"Column Break\"}, {\"fieldname\": \"employee_name\", \"print_hide\": 0, \"label\": \"Employee Name\"}, {\"fieldname\": \"department\", \"print_hide\": 0, \"label\": \"Department\"}, {\"fieldname\": \"designation\", \"print_hide\": 0, \"label\": \"Designation\"}, {\"fieldname\": \"salary_structure\", \"print_hide\": 0, \"label\": \"Salary Structure\"}, {\"fieldtype\": \"Column Break\"}, {\"fieldname\": \"payroll_frequency\", \"print_hide\": 0, \"label\": \"Payroll Frequency\"}, {\"fieldtype\": \"Section Break\", \"label\": \"Pay Details\"}, {\"fieldtype\": \"Column Break\"}, {\"fieldname\": \"total_working_days\", \"print_hide\": 0, \"label\": \"Working Days\"}, {\"fieldname\": \"unmarked_days\", \"print_hide\": 0, \"label\": \"Unmarked days\"}, {\"fieldname\": \"leave_without_pay\", \"print_hide\": 0, \"label\": \"Leave Without Pay\"}, {\"fieldname\": \"charge_tax_on_overtime\", \"print_hide\": 0, \"label\": \"Charge Tax on Overtime\"}, {\"fieldname\": \"tax_rate_for_overtime\", \"print_hide\": 0, \"label\": \"Tax Rate for Overtime\"}, {\"fieldtype\": \"Column Break\"}, {\"fieldname\": \"no_of_public_holidays_worked\", \"print_hide\": 0, \"label\": \"No of Public Holidays Worked\"}, {\"fieldname\": \"total_overtime_hours\", \"print_hide\": 0, \"label\": \"Total No of Weekdays Overtime Hours\"}, {\"fieldname\": \"no_of_sundays_worked\", \"print_hide\": 0, \"label\": \"No of Sundays Worked\"}, {\"fieldname\": \"absent_days\", \"print_hide\": 0, \"label\": \"Absent Days\"}, {\"fieldname\": \"self_filed_day_of_absent\", \"print_hide\": 0, \"label\": \"Self Filed Day of Absent\"}, {\"fieldtype\": \"Section Break\", \"label\": \"Bank Detail\"}, {\"fieldtype\": \"Column Break\"}, {\"fieldname\": \"bank_name\", \"print_hide\": 0, \"label\": \"Bank Name\"}, {\"fieldname\": \"bank_account_no\", \"print_hide\": 0, \"label\": \"Bank Account No.\"}, {\"fieldtype\": \"Column Break\"}, {\"fieldname\": \"mode_of_payment\", \"print_hide\": 0, \"label\": \"Mode Of Payment\"}, {\"fieldtype\": \"Section Break\", \"label\": \"Earnings & Deductions\"}, {\"fieldtype\": \"Column Break\"}, {\"fieldname\": \"earnings\", \"print_hide\": 0, \"label\": \"Earnings\", \"visible_columns\": [{\"fieldname\": \"salary_component\", \"print_width\": \"\", \"print_hide\": 0}, {\"fieldname\": \"amount\", \"print_width\": \"\", \"print_hide\": 0}]}, {\"fieldtype\": \"Column Break\"}, {\"fieldname\": \"deductions\", \"print_hide\": 0, \"label\": \"Deductions\", \"visible_columns\": [{\"fieldname\": \"salary_component\", \"print_width\": \"\", \"print_hide\": 0}, {\"fieldname\": \"amount\", \"print_width\": \"\", \"print_hide\": 0}]}, {\"fieldtype\": \"Section Break\", \"label\": \"\"}, {\"fieldtype\": \"Column Break\"}, {\"fieldname\": \"gross_pay\", \"print_hide\": 0, \"label\": \"Gross Pay\"}, {\"fieldtype\": \"Column Break\"}, {\"fieldname\": \"total_deduction\", \"print_hide\": 0, \"label\": \"Total Deduction\"}, {\"fieldtype\": \"Section Break\", \"label\": \"Net Pay Info\"}, {\"fieldtype\": \"Column Break\"}, {\"fieldname\": \"net_pay\", \"print_hide\": 0, \"label\": \"Net Pay\"}, {\"fieldtype\": \"Column Break\"}, {\"fieldname\": \"total_in_words\", \"print_hide\": 0, \"label\": \"Total in words\"}, {\"fieldtype\": \"Section Break\", \"label\": \"Leave Details\"}, {\"fieldtype\": \"Column Break\"}, {\"fieldname\": \"leave_details\", \"print_hide\": 0, \"label\": \"Leave Details\", \"visible_columns\": [{\"fieldname\": \"leave_type\", \"print_width\": \"\", \"print_hide\": 0}, {\"fieldname\": \"total_allocated_leaves\", \"print_width\": \"\", \"print_hide\": 0}, {\"fieldname\": \"used_leaves\", \"print_width\": \"\", \"print_hide\": 0}, {\"fieldname\": \"pending_leaves\", \"print_width\": \"\", \"print_hide\": 0}, {\"fieldname\": \"available_leaves\", \"print_width\": \"\", \"print_hide\": 0}]}]",
+  "html": null,
+  "line_breaks": 0,
+  "modified": "2022-04-11 22:57:13.358334",
+  "module": "Payroll",
+  "name": "Express PSlip",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "print_format_builder": 1,
+  "print_format_type": "Jinja",
+  "raw_commands": null,
+  "raw_printing": 0,
+  "show_section_headings": 0,
+  "standard": "No"
+ }
+]
