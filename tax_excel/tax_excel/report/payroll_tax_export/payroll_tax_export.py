@@ -29,14 +29,14 @@ def execute(filters=None):
 	{'fieldname':'branch','label':'Current State','width':'100'},    
 	{'fieldname':'designation','label':'Designation','width':'100'},
 	{'fieldname':'department','label':'Department','width':'150'},
-	{'fieldname':'contrib','label':'Tax','width':'150'},
-	{'fieldname':'liabil','label':'Overtime Tax','width':'150'},
+	{'fieldname':'contrib','label':'Tax','width':'150','fieldtype': 'Float'},
+	{'fieldname':'liabil','label':'Overtime Tax','width':'150','fieldtype': 'Float'},
 	]
 	
-	nw_data = "SELECT name, employee,employee_name,date_of_joining,department,designation,grade,start_date,end_date,contrib,liabil,branch FROM (select \
+	nw_data = "SELECT name, employee,employee_name,date_of_joining,department,designation,grade,start_date,end_date,contrib ,liabil ,branch FROM (select \
 		s.name,s.employee,s.employee_name,s.start_date,s.end_date,s.docstatus, \
 		e.tax_id,e.date_of_joining,e.department,e.current_state_of_abode_ as branch,e.designation,e.grade, e.pension_id,e.name_of_pension_manager,e.pension_manager,e.employee_name as femployee, \
-		v.contrib, v.liabil,v.parent \
+		v.contrib , v.liabil ,v.parent \
  		from `tabSalary Slip` s left join `tabEmployee` e on s.employee = e.name \
 		LEFT JOIN \
 				(SELECT Distinct k.parent, \

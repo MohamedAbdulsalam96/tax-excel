@@ -17,23 +17,13 @@ frappe.ui.form.on('Payslip Viewer', {
 
 	  export_pension: function (frm) {
 		  if (frm.doc.from_date != undefined && frm.doc.from_date != "" && frm.doc.to_date != undefined && frm.doc.to_date != "") {
-			frappe.call({
-				method: "tax_excel.tax_excel.utils.pension_remittance",
-				args: {
-				  company: frm.doc.company,
-				  from_date: frm.doc.from_date,
-				  to_date: frm.doc.to_date
-				},
-				callback: function (r) {
-				  let msg = r.message;
-				  let a = "<a href='"+msg+"' target='_blank' >here</a>";
-				  frappe.msgprint({
-					  title: __('Notification'),
-					  indicator: 'green',
-					  message: __('Document exported successfully get file '+a)
-				  });
-				}
-			  });
+			const args = {
+				cmd: 'tax_excel.tax_excel.utils.pension_remittance',
+				report_name: `${Date.now()}.xlsx`,
+				from_date:frm.doc.from_date,
+				to_date:frm.doc.to_date,
+			};
+			open_url_post(frappe.request.url, args);
 		  }
 		  else{
 			frappe.msgprint("Please select a 'from date' or 'to date'");
@@ -43,23 +33,14 @@ frappe.ui.form.on('Payslip Viewer', {
 
 	  payroll_tax: function (frm) {
 		  if (frm.doc.from_date != undefined && frm.doc.from_date != "" && frm.doc.to_date != undefined && frm.doc.to_date != "") {
-			frappe.call({
-				method: "tax_excel.tax_excel.utils.pay_roll_tax_report",
-				args: {
-				  company: frm.doc.company,
-				  from_date: frm.doc.from_date,
-				  to_date: frm.doc.to_date
-				},
-				callback: function (r) {
-					let msg = r.message;
-					let a = "<a href='"+msg+"' target='_blank' >here</a>";
-					frappe.msgprint({
-						title: __('Notification'),
-						  indicator: 'green',
-						  message: __('Document exported successfully get file '+a)
-					  });
-				}
-			  });
+			  //"tax_excel.tax_excel.utils.pay_roll_tax_report",
+				const args = {
+					cmd: 'tax_excel.tax_excel.utils.pay_roll_tax_report',
+					report_name: `${Date.now()}.xlsx`,
+					from_date:frm.doc.from_date,
+					to_date:frm.doc.to_date,
+				};
+				open_url_post(frappe.request.url, args);
 		  }
 		  else{
 			frappe.msgprint("Please select a 'from date' or 'to date'");

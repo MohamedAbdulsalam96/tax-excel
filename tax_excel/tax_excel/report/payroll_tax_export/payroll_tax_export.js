@@ -20,39 +20,18 @@ frappe.query_reports["Payroll Tax Export"] = {
 	],
 	onload: function(report){
 		report.page.add_inner_button(__("Export To Excel"), function(){
-			var fm_d = frappe.query_report.get_filter_value('date_from_filter');
-			var to_d = frappe.query_report.get_filter_value('date_to_filter');
-			//console.log
+			let fm_d = frappe.query_report.get_filter_value('date_from_filter');
+			let to_d = frappe.query_report.get_filter_value('date_to_filter');
+
 			if (fm_d != undefined && fm_d != "" && to_d != undefined && to_d != "") {
-				//
-				frappe.call({				
-					method: "tax_excel.tax_excel.utils.pay_roll_tax_report",
-					args: {
-					  company: report.company,
-					  from_date: fm_d,
-					  to_date: to_d
-					},
-					callback: function (r) {
-						if (r.message.length > 0) {
-							//
-							let msg = r.message;
-							let a = "<a href='"+msg+"' target='_blank' >here</a>";
-							frappe.msgprint({
-								title: __('Notification'),
-								indicator: 'green',
-								message: __('Document exported successfully get file '+a)
-							});
-						}
-						else{
-							frappe.msgprint({
-								title: __('Notification'),
-								indicator: 'red',
-								message: __('No record to export')
-							});
-						}
-					  
-					}
-				});
+				//method: "tax_excel.tax_excel.utils.pay_roll_tax_report",
+				const args = {
+					cmd: 'tax_excel.tax_excel.utils.pay_roll_tax_report',
+					report_name: `${Date.now()}.xlsx`,
+					from_date:fm_d,
+					to_date:to_d,
+				};
+				open_url_post(frappe.request.url, args);
 			}
 			else{
 				//
@@ -61,5 +40,17 @@ frappe.query_reports["Payroll Tax Export"] = {
 			
 		});
 		report.page.change_inner_button_type('Export To Excel',null, 'success');
-	}
+	},
+	/*"formatter": function (value, row, column, data, default_formatter) {
+		value = default_formatter(value, row, column, data);
+
+		if (column.fieldname == "contrib" && data && data.debit > 0) {
+			value = "<span style='color:red'>" + value + "</span>";
+		}
+		else if (column.fieldname == "liabil" && data && data.credit > 0) {
+			value = "<span style='color:green; font-weight:bolder'>" + value + "</span>";
+		}
+
+		return value;
+	}*/
 };

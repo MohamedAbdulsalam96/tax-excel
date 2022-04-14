@@ -20,41 +20,20 @@ frappe.query_reports["Pension Remittance Export"] = {
 	],
 	onload: function(report){
 		report.page.add_inner_button(__("Export To Excel"), function(){
-			var frm_d = frappe.query_report.get_filter_value('date_from_filter');
-			var to_d = frappe.query_report.get_filter_value('date_to_filter');
-			
+			let frm_d = frappe.query_report.get_filter_value('date_from_filter');
+			let to_d = frappe.query_report.get_filter_value('date_to_filter');
+
 			if (frm_d != undefined && frm_d != "" && to_d != undefined && to_d != ""){
-				frappe.call({				
-					method: "tax_excel.tax_excel.utils.pension_remittance",
-					args: {
-					company: report.company,
-					from_date: frm_d,
-					to_date: to_d
-					},
-					callback: function (r) {
-						if (r.message.length > 0) {
-							//
-							let msg = r.message;
-							let a = "<a href='"+msg+"' target='_blank' >here</a>";
-							frappe.msgprint({
-								title: __('Notification'),
-								indicator: 'green',
-								message: __('Document exported successfully get file '+a)
-							});
-					
-						}
-						else{
-							frappe.msgprint({
-								title: __('Notification'),
-								indicator: 'red',
-								message: __('No record to export')
-							});
-						}
-					
-					}
-				});
+				const args = {
+					cmd: 'tax_excel.tax_excel.utils.pension_remittance',
+					report_name: `${Date.now()}.xlsx`,
+					from_date:frm_d,
+					to_date:to_d,
+				};
+				open_url_post(frappe.request.url, args);
 			}
 			else{
+				//
 				frappe.msgprint("Please select a valid 'from date' and or 'to date'");
 			}
 			
@@ -62,4 +41,4 @@ frappe.query_reports["Pension Remittance Export"] = {
 		report.page.change_inner_button_type('Export To Excel', null, 'success');
 	},
 	
-}
+};

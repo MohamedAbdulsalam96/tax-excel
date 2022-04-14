@@ -1,6 +1,10 @@
 from __future__ import unicode_literals
+from http.client import HTTPResponse
 import frappe
 import xlsxwriter as xw
+from xlsxwriter.workbook import Workbook
+import io
+#from io import BytesIO
 from frappe.utils import (
     today,
     format_time,
@@ -9,7 +13,6 @@ from frappe.utils import (
     get_first_day,
 )
 from frappe import _
-import datetime
 
 
 
@@ -17,20 +20,19 @@ import datetime
 @frappe.whitelist()
 def pension_remittance(company=None, from_date=None, to_date=None):
     """"""
-    #condition_pm = " WHERE 1=1 "
     condition_date = ""
     if not from_date:
         from_date = get_first_day(today()).strftime("%Y-%m-%d")
     if not to_date:
         to_date = today()
     
-    date_time = global_date_format(now()) + " " + format_time(now())
-    currency = frappe.db.get_value("Company", company, "default_currency")
+    #date_time = global_date_format(now()) + " " + format_time(now())
+    #currency = frappe.db.get_value("Company", company, "default_currency")
 
     condition_date = "where start_date BETWEEN '"+ from_date + \
         "' AND '" + to_date + "'"
-    fp ='Pension_Report.xlsx'
-    wbook = xw.Workbook(name_path(fp))
+    output = io.BytesIO()
+    wbook = Workbook(output, {'in_memory':True})
     nw_data = "SELECT * FROM (select s.name, s.employee_name, s.employee, s.start_date, s.end_date,e.pension_id,v.contrib, v.liabil,e.name_of_pension_manager,e.pension_manager,e.employee_name as femployee,s.docstatus from `tabSalary Slip` s left join `tabEmployee` e on s.employee = e.name\
 			LEFT JOIN\
 				(SELECT Distinct k.parent,\
@@ -45,7 +47,6 @@ def pension_remittance(company=None, from_date=None, to_date=None):
 				in ('Pension contribution Employee','Pension Employer Contr.')\
 				) k\
 			) v ON s.name = v.parent ) a {} ".format(condition_date)
-    #data = frappe.db.sql(nw_data, as_dict=1,)
     data = frappe.db.sql(nw_data, as_dict=1,)
 
     pm_lst =[]
@@ -78,7 +79,6 @@ def pension_remittance(company=None, from_date=None, to_date=None):
 
         rwnum = 4
         colnum = 0 
-		#cal_start = 4
         dr_size = 2
         t_contr = 0
         t_liabil = 0
@@ -107,12 +107,15 @@ def pension_remittance(company=None, from_date=None, to_date=None):
         ws.write("A1","Pension Manager")
         ws.write("B1", pm)
 
-    #print("\n\n got her been here \n\n\n")
     wbook.close()
+
+    output.seek(0)
+
+    frappe.response["filename"] = "penremit.xlsx"
+    frappe.response["filecontent"] = output.read()
+    frappe.response["type"] = "binary"
+    output.close()
     
-    return file_path_return(fp)
-
-
 @frappe.whitelist()
 def pay_roll_tax_report(company=None, from_date=None, to_date=None):
     """"""
@@ -122,14 +125,15 @@ def pay_roll_tax_report(company=None, from_date=None, to_date=None):
     if not to_date:
         to_date = today()
     
-    date_time = global_date_format(now()) + " " + format_time(now())
-    currency = frappe.db.get_value("Company", company, "default_currency")
+    #date_time = global_date_format(now()) + " " + format_time(now())
+    #currency = frappe.db.get_value("Company", company, "default_currency")
 
     condition_date = "where start_date BETWEEN '"+ from_date + \
         "' AND '" + to_date + "'"
     
-    fp ='Tax_report.xlsx'
-    wbook = xw.Workbook(name_path(fp))
+    output = io.BytesIO()
+    #wbook = xw.Workbook(name_path(fp))
+    wbook = Workbook(output, {'in_memory':True})
     nw_data = "SELECT * FROM (select \
 		s.name,s.employee,s.employee_name,s.start_date,s.end_date,s.docstatus, \
 		e.tax_id,e.date_of_joining,e.department,e.current_state_of_abode_ as branch,e.designation,e.grade, e.pension_id,e.name_of_pension_manager,e.pension_manager,e.employee_name as femployee, \
@@ -205,50 +209,25 @@ def pay_roll_tax_report(company=None, from_date=None, to_date=None):
         ws.write("B2", cs)
 
     wbook.close()
-    return file_path_return(fp)
+    output.seek(0)
 
-def name_path(fp):
-    """"""
-    #f_path = frappe.get_site_path(fp)
-    f_path = frappe.get_site_path()+'/private/'+fp
-    #print(f"\n\n\n site path{frappe.get_site_path()+'/private/'+fp}\n\n\n")    
-    return f_path
-
-def file_path_return (cf):
-    file_path = frappe.utils.get_bench_path() + '/' + \
-        frappe.utils.get_site_name(frappe.local.site) + \
-            '/private/'+cf 
-    return file_path
+    frappe.response["filename"] = "paytax.xlsx"
+    frappe.response["filecontent"] = output.read()
+    frappe.response["type"] = "binary"
+    output.close()
 
 
 @frappe.whitelist()
 def pay_printslip_formatter (company=None, from_date=None, to_date=None):    
-    """    
-    get slip id 
-    report_ps_filters = {
-        "company": company,
-        "doc": [customer_name],
-        "from_date": from_date,
-        "to_date": to_date,
-        
-    } 
-    #frappe.db.get_value("Company", company, "default_currency")
-    
-    #ps_report = frappe.get_doc("Salary Slip", "Sal Slip/EMP-00001/00005") 
-    pss_report = frappe.get_doc("DocType", "Salary Slip").get_data(
-        limit=500, user="Administrator", filters="{'name':'Sal Slip/EMP-00001/00005'}", as_dict=True
-    )
-     data_ps = ps_report.get_data(
-        limit=500, user="Administrator", filters="Sal Slip/EMP-00001/00005", as_dict=True
-    ) """
-    #data_ps =ps_report.get_all()
-    #ps_report = frappe.db.get_value("Salary Slip", "Sal Slip/EMP-00001/00005")
-    #ps_report = frappe.get_value("Salary Slip")
-    #print(f'\n\n\n\n inside  : {pss_report} \n\n\n\n')
-    ps = frappe.db.get_list('Salary Slip', filters={'name':'Sal Slip/EMP-00001/00005' },
+    """ """
+    ps = frappe.db.get_list('Salary Slip', filters={'name':'frm.name' },
     fields=['*'])
-    print(f'\n\n\n\n inside  : {ps} \n\n\n\n')
+    print(f'\n\n\n\n  : {ps} \n\n\n\n')
     
 
 
     return True
+    #error
+    """ response = HTTPResponse(output.read(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" )
+TypeError: __init__() got an unexpected keyword argument 'content_type'"""
+
