@@ -1,10 +1,8 @@
 from __future__ import unicode_literals
 from http.client import HTTPResponse
 import frappe
-import xlsxwriter as xw
 from xlsxwriter.workbook import Workbook
 import io
-#from io import BytesIO
 from frappe.utils import (
     today,
     format_time,
@@ -19,7 +17,10 @@ from frappe import _
 
 @frappe.whitelist()
 def pension_remittance(company=None, from_date=None, to_date=None):
-    """"""
+    """
+    from io import BytesIO
+    import xlsxwriter as xw
+    """
     condition_date = ""
     if not from_date:
         from_date = get_first_day(today()).strftime("%Y-%m-%d")
@@ -33,18 +34,18 @@ def pension_remittance(company=None, from_date=None, to_date=None):
         "' AND '" + to_date + "'"
     output = io.BytesIO()
     wbook = Workbook(output, {'in_memory':True})
-    nw_data = "SELECT * FROM (select s.name, s.employee_name, s.employee, s.start_date, s.end_date,e.pension_id,v.contrib, v.liabil,e.name_of_pension_manager,e.pension_manager,e.employee_name as femployee,s.docstatus from `tabSalary Slip` s left join `tabEmployee` e on s.employee = e.name\
+    nw_data = "SELECT * FROM (select s.name, s.employee_name, s.employee, s.start_date, s.end_date,e.pension_id,v.pension_eyee, v.pension_eyrr,e.name_of_pension_manager,e.pension_manager,e.employee_name as femployee,s.docstatus from `tabSalary Slip` s left join `tabEmployee` e on s.employee = e.name\
 			LEFT JOIN\
 				(SELECT Distinct k.parent,\
-					IFNULL((select d.amount from `tabSalary Detail` d where d.parentfield='deductions'and d.salary_component ='Pension contribution Employee' and d.parent=k.parent),0) as contrib,\
-					IFNULL((select d.amount from `tabSalary Detail` d where d.parentfield='earnings'and d.salary_component = 'Pension Employer Contr.'and d.parent=k.parent),0) as liabil\
+					IFNULL((select d.amount from `tabSalary Detail` d where d.parentfield='deductions'and d.salary_component ='Pension EYEE' and d.parent=k.parent),0) as pension_eyee,\
+					IFNULL((select d.amount from `tabSalary Detail` d where d.parentfield='earnings'and d.salary_component = 'Pension EYRR'and d.parent=k.parent),0) as pension_eyrr\
 				FROM (select\
 				d.amount,\
 				d.parent,\
 				d.salary_component\
 				from `tabSalary Detail` d\
 				where d.salary_component\
-				in ('Pension contribution Employee','Pension Employer Contr.')\
+				in ('Pension EYEE','Pension EYRR')\
 				) k\
 			) v ON s.name = v.parent ) a {} ".format(condition_date)
     data = frappe.db.sql(nw_data, as_dict=1,)
@@ -52,7 +53,7 @@ def pension_remittance(company=None, from_date=None, to_date=None):
     pm_lst =[]
     headers_list =[
 		'Salary Slip ID','Employee','Employee Name','Start Date','End Date','Pension ID',
-		'Pension EYRR','Pension EYEE','Total'
+		'Pension EYEE','Pension EYRR','Total'
 	]
     
     #header format
@@ -190,7 +191,6 @@ def pay_roll_tax_report(company=None, from_date=None, to_date=None):
             ws.write(rwnum,colnum+2,populate[i]['employee_name'])
             ws.write(rwnum,colnum+3,populate[i]['tax_id'])
             ws.write(rwnum,colnum+4,populate[i]['date_of_joining'],date_format)
-            #ws.write(rwnum,colnum+4,populate[i]['department'])
             ws.write(rwnum,colnum+5,populate[i]['designation'])
             ws.write(rwnum,colnum+6,populate[i]['grade'])
             ws.write(rwnum,colnum+7,populate[i]['start_date'],date_format)

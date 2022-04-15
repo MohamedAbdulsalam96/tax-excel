@@ -28,22 +28,22 @@ def execute(filters=None):
 	{'fieldname':'date_of_joining','label':'Date of Joining','width':'120'},
 	{'fieldname':'name_of_pension_manager','label':'Pension Manager','width':'200'},
 	{'fieldname':'pension_id','label':'Pension ID','width':'160'},
-	{'fieldname':'pension_eyrr','label':'Pension EYRR','width':'100','fieldtype': 'Float'},
-	{'fieldname':'pension_eyee','label':'Pension EYEE','width':'100','fieldtype': 'Float'},
+	{'fieldname':'pension_eyee','label':'Pension EYRR','width':'100','fieldtype': 'Float'},
+	{'fieldname':'pension_eyrr','label':'Pension EYEE','width':'100','fieldtype': 'Float'},
 	{'fieldname':'pension_total','label':'Pension Total','width':'100','fieldtype': 'Float'},
 	]
-	nw_data = "SELECT * FROM (select s.name, s.employee_name, s.employee, s.start_date, s.end_date,e.pension_id,v.pension_eyrr, v.pension_eyee,(pension_eyrr+pension_eyee) as pension_total,e.date_of_joining,e.name_of_pension_manager,e.pension_manager,e.employee_name as femployee,s.docstatus from `tabSalary Slip` s left join `tabEmployee` e on s.employee = e.name\
+	nw_data = "SELECT * FROM (select s.name, s.employee_name, s.employee, s.start_date, s.end_date,e.pension_id,v.pension_eyee, v.pension_eyrr,(pension_eyee+pension_eyrr) as pension_total,e.date_of_joining,e.name_of_pension_manager,e.pension_manager,e.employee_name as femployee,s.docstatus from `tabSalary Slip` s left join `tabEmployee` e on s.employee = e.name\
 			LEFT JOIN\
 				(SELECT Distinct k.parent,\
-					IFNULL((select d.amount from `tabSalary Detail` d where d.parentfield='deductions'and d.salary_component ='Pension contribution Employee' and d.parent=k.parent),0) as pension_eyrr,\
-					IFNULL((select d.amount from `tabSalary Detail` d where d.parentfield='earnings'and d.salary_component = 'Pension Employer Contr.'and d.parent=k.parent),0) as pension_eyee\
+					IFNULL((select d.amount from `tabSalary Detail` d where d.parentfield='deductions'and d.salary_component ='Pension EYEE' and d.parent=k.parent),0) as pension_eyee,\
+					IFNULL((select d.amount from `tabSalary Detail` d where d.parentfield='earnings'and d.salary_component = 'Pension EYRR'and d.parent=k.parent),0) as pension_eyrr\
 				FROM (select\
 				d.amount,\
 				d.parent,\
 				d.salary_component\
 				from `tabSalary Detail` d\
 				where d.salary_component\
-				in ('Pension contribution Employee','Pension Employer Contr.')\
+				in ('Pension EYEE','Pension EYRR')\
 				) k\
 			) v ON s.name = v.parent ) a {} ".format(condition_date)
 
