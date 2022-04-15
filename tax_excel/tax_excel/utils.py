@@ -85,8 +85,8 @@ def pension_remittance(company=None, from_date=None, to_date=None):
         t_liabil = 0
         populate = [x for x in data if x['name_of_pension_manager']==pm]
         for i in range(len(populate)):
-            t_con = populate[i]['contrib'] or 0
-            t_bill = populate[i]['liabil'] or 0
+            t_con = populate[i]['pension_eyee'] or 0
+            t_bill = populate[i]['pension_eyrr'] or 0
             ws.write(rwnum,colnum,populate[i]['name'])
             ws.write(rwnum,colnum+1,populate[i]['employee'])
             ws.write(rwnum,colnum+2,populate[i]['employee_name'])
