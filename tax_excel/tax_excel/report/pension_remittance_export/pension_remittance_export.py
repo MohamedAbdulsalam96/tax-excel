@@ -2,10 +2,9 @@
 # For license information, please see license.txt
 
 import frappe
-import xlsxwriter as xw
 
 def execute(filters=None):
-	"""button to export"""
+	"""view to export"""
 	condition_date = ""
 	condition_pm = ""
 	if filters.date_from_filter and filters.date_to_filter :
@@ -18,7 +17,6 @@ def execute(filters=None):
 
 	if filters.get("pm_filter"):
 		pm_item = filters.get("pm_filter")
-		#print(f"view it {pm_item} ")
 		condition_pm += f" AND name_of_pension_manager = '{pm_item}'"
 
 	columns = [
