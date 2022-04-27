@@ -75,7 +75,7 @@ def pension_remittance(company=None, from_date=None, to_date=None):
         if e['name_of_pension_manager'] not in pm_lst:
             pm_lst.append(e['name_of_pension_manager'])
     for pm in pm_lst:
-        ws = wbook.add_worksheet(pm)
+        ws = wbook.add_worksheet(pm[:30])
         ws.write_row(3,0, headers_list,heading_format)
 
         rwnum = 4
@@ -105,8 +105,10 @@ def pension_remittance(company=None, from_date=None, to_date=None):
         ws.write_number(rwnum+dr_size, 7, t_liabil,total_format)
         ws.write_number(rwnum+dr_size, 8, t_contr+t_liabil,total_format)
         
-        ws.write("A1","Pension Manager")
-        ws.write("B1", pm)
+        ws.write("A1",from_date)
+        ws.write("B1",to_date)
+        ws.write("A2","Pension Manager")
+        ws.write("B2", pm)
 
     wbook.close()
 
@@ -174,7 +176,7 @@ def pay_roll_tax_report(company=None, from_date=None, to_date=None):
             state_lst.append(s['branch'])
     for cs in state_lst:
         populate = []
-        ws = wbook.add_worksheet(cs)
+        ws = wbook.add_worksheet(cs[:30])
         ws.write_row(3,0, headers_list,heading_format)
 
         rwnum = 4
@@ -205,6 +207,8 @@ def pay_roll_tax_report(company=None, from_date=None, to_date=None):
         ws.write_number(rwnum+dr_size, 9, t_contr,total_format)
         ws.write_number(rwnum+dr_size, 10, t_liabil,total_format)
 
+        ws.write("A1",from_date)
+        ws.write("B1",to_date)
         ws.write("A2", "State")
         ws.write("B2", cs)
 
@@ -222,7 +226,7 @@ def pay_printslip_formatter (company=None, from_date=None, to_date=None):
     """ """
     ps = frappe.db.get_list('Salary Slip', filters={'name':'frm.name' },
     fields=['*'])
-    print(f'\n\n\n\n  : {ps} \n\n\n\n')
+    #print(f'\n\n\n\n  : {ps} \n\n\n\n')
     
 
 
