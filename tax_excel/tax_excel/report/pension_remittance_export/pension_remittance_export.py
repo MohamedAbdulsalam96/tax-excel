@@ -12,7 +12,7 @@ def execute(filters=None):
 			filters.date_from_filter = frappe.datetime.get_today()
 		if filters.date_to_filter == None:
 			filters.date_to_filter = frappe.datetime.get_today()
-		condition_date = "where start_date BETWEEN '"+ filters.date_from_filter + \
+		condition_date = "AND start_date BETWEEN '"+ filters.date_from_filter + \
         "' AND '" + filters.date_to_filter + "'"
 
 	if filters.get("pm_filter"):
@@ -43,7 +43,7 @@ def execute(filters=None):
 				where d.salary_component\
 				in ('Pension EYEE','Pension EYRR')\
 				) k\
-			) v ON s.name = v.parent ) a {} ".format(condition_date)
+			) v ON s.name = v.parent ) a WHERE name_of_pension_manager IS NOT NULL {} ".format(condition_date)
 
 	data = frappe.db.sql(nw_data, as_dict=1,)
 

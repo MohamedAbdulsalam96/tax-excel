@@ -12,12 +12,8 @@ def execute(filters=None):
 			filters.date_from_filter = frappe.datetime.get_today()
 		if filters.date_to_filter == None:
 			filters.date_to_filter = frappe.datetime.get_today()
-		condition_date = "where start_date BETWEEN '"+ filters.date_from_filter + \
+		condition_date = "AND start_date BETWEEN '"+ filters.date_from_filter + \
         "' AND '" + filters.date_to_filter + "'"
-
-	if filters.get("pm_filter"):
-		pm_item = filters.get("pm_filter")
-		condition_pm += f" AND name_of_pension_manager = '{pm_item}'"
 
 	columns = [
     {'fieldname':'name','label':'Salary Slip ID','width':'200'},
@@ -41,7 +37,7 @@ def execute(filters=None):
         					IFNULL((select d.amount from `tabSalary Detail` d where d.parentfield='deductions'and d.salary_component ='Tax' and d.parent=k.parent),0) as contrib, \
         					IFNULL((select d.amount from `tabSalary Detail` d where d.parentfield='deductions'and d.salary_component = 'Overtime Tax'and d.parent=k.parent),0) as liabil \
         FROM (select d.amount,d.parent,d.salary_component from `tabSalary Detail` d where d.salary_component in ('Tax','Overtime Tax') ) k \
-			) v ON s.name = v.parent ) a {} ".format(condition_date) 
+			) v ON s.name = v.parent ) a WHERE branch <> '' {} ".format(condition_date) 
 
 	data = frappe.db.sql(nw_data, as_dict=1,)
 

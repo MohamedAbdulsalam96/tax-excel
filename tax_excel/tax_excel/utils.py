@@ -30,7 +30,7 @@ def pension_remittance(company=None, from_date=None, to_date=None):
     #date_time = global_date_format(now()) + " " + format_time(now())
     #currency = frappe.db.get_value("Company", company, "default_currency")
 
-    condition_date = "where start_date BETWEEN '"+ from_date + \
+    condition_date = "AND start_date BETWEEN '"+ from_date + \
         "' AND '" + to_date + "'"
     output = io.BytesIO()
     wbook = Workbook(output, {'in_memory':True})
@@ -47,7 +47,7 @@ def pension_remittance(company=None, from_date=None, to_date=None):
 				where d.salary_component\
 				in ('Pension EYEE','Pension EYRR')\
 				) k\
-			) v ON s.name = v.parent ) a {} ".format(condition_date)
+			) v ON s.name = v.parent ) a WHERE name_of_pension_manager IS NOT NULL {} ".format(condition_date)
     data = frappe.db.sql(nw_data, as_dict=1,)
 
     pm_lst =[]
